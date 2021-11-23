@@ -1,7 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-// #include "../includes/glad/glad.h"
-// #include "../includes/GLFW/glfw3.h"
 
 #include <iostream>
 
@@ -45,7 +43,31 @@ int main()
         return -1;
     }
 
-    std::cout << glGetString(GL_VERSION) << std::endl;
+    // set up vertex data (and buffer(s)) and configure vertex attributes
+    // ------------------------------------------------------------------
+    float firstTriangle[] = {
+        -9.0f, -0.5f, 0.0f,  // left 
+        -0.0f, -0.5f, 0.0f,  // right
+        -4.5f, 0.5f, 0.0f,  // top 
+    };
+    float secondTriangle[] = {
+        0.0f, -0.5f, 0.0f,  // left
+        9.0f, -0.5f, 0.0f,  // right
+        4.5f, 0.5f, 0.0f   // top 
+    };
+
+    GLuint vb;
+    glGenBuffers(1, &vb);
+    glBindBuffer(GL_VERTEX_ARRAY, vb);
+    glBufferData(GL_VERTEX_ARRAY, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_VERTEX_ARRAY, 0);
+    // glMatrixMode(GL_MODELVIEW);
+    // glLoadIdentity();
+
+
+    // uncomment this call to draw in wireframe polygons.
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render loop
     // -----------
@@ -54,6 +76,24 @@ int main()
         // input
         // -----
         processInput(window);
+
+        // render
+        // ------
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glBindBuffer(GL_VERTEX_ARRAY, vb);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, 0, 0);
+
+        // glPushMatrix();
+        // glScalef(10.0f, 5.0f, 8.0f);
+        // glColor3f(1.0f, 0.0f, 0.0f);
+        glDrawArrays(GL_TRIANGLES, 0, 3);  // this call should output an orange triangle
+        // glPopMatrix();
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_VERTEX_ARRAY, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -71,7 +111,7 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
 {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
 

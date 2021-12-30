@@ -1,1 +1,1 @@
-const char * logl_root = "${CMAKE_SOURCE_DIR}";
+const char * logl_root = "C:\\Users\\dizhou\\Desktop\\git_repos\\LearnOpenGL\\";
